@@ -41,3 +41,22 @@
 .nav-link{
   padding: 2rem;
 }
+
+.food-menu{
+  display: flex;
+  list-style-type: none;
+}
+
+.food-card{
+  border: 1px solid black;
+  margin: 10px;
+}
+
+.food-card p{
+  padding: 5px;
+}
+.food-card img{
+  width: 15rem;
+  height: 15rem;
+  padding: 1rem;
+}
