@@ -1,8 +1,9 @@
 import { useContext } from "react"
 import { MenuContext } from "../contexts/menuContext"
+import { NavLink } from "react-router-dom";
 
 export function Menu(){
-    const {displayData, handleSort,changeHandler, handleCheck} = useContext(MenuContext);
+    const {displayData, handleSort,changeHandler, handleCheck, cart,addToCart} = useContext(MenuContext);
 
     return (
         <div>
@@ -41,6 +42,11 @@ export function Menu(){
                <p>Descrption: {food.description} </p>
                <p>Price: {food.price}</p>
                <p>Delivery Time: {food.delivery_time}</p>
+               {
+                !cart.includes(food) 
+                ? <button onClick={()=> addToCart(food)}>Add to Cart</button>
+                : <NavLink to="/cart"><button>Go to Cart</button></NavLink>
+               }
                 </li>)
             } 
             </ul>

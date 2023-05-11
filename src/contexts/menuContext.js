@@ -6,6 +6,7 @@ export const MenuContext = createContext();
 
 export const MenuProvider = ({children}) =>{
     const [menuData, setMenuData] = useState([]);
+    const [cart, setCart] = useState([]);
     const [displayData, setDisplayData] = useState([]);
 
     const getData = async () =>{
@@ -45,13 +46,15 @@ export const MenuProvider = ({children}) =>{
          setDisplayData(menuData);
     }
 
+    const addToCart = (item) => setCart([...cart, item]);
+
 
     useEffect(()=>{
       getData();
     },[])
 
     return (
-        <MenuContext.Provider value={{displayData,handleSort, changeHandler, handleCheck}}>
+        <MenuContext.Provider value={{displayData,handleSort, changeHandler, handleCheck, cart,addToCart}}>
         {children}
         </MenuContext.Provider>
     )
