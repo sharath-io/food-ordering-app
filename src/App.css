@@ -39,7 +39,7 @@
 }
 
 .nav-link{
-  padding: 2rem;
+  padding: 1rem;
 }
 
 .food-menu{
@@ -47,16 +47,17 @@
   list-style-type: none;
 }
 
-.food-card{
+.food-card {
   border: 1px solid black;
-  margin: 10px;
+  margin: 5px;
+  width: 200px;
+  height: 560px;
 }
 
 .food-card p{
-  padding: 5px;
+  padding: 3px;
 }
 .food-card img{
-  width: 15rem;
-  height: 15rem;
-  padding: 1rem;
+  width: 10rem;
+  padding: 0.2rem;
 }

@@ -7,14 +7,42 @@ export const MenuContext = createContext();
 export const MenuProvider = ({children}) =>{
     const [menuData, setMenuData] = useState([]);
     const [cart, setCart] = useState([]);
-    const [displayData, setDisplayData] = useState([]);
+    const [filters, setFilters] = useState({
+        search:'', 
+        checkBox: [],
+        sortType: null});
+
+    const handleSearch = (searchItem) =>{
+        setFilters({...filters,search: searchItem});
+    }
+
+    const handleSort = (type) => setFilters({...filters, sortType: type});
+
+    const handleCheckbox =(type) =>{
+        filters.checkBox.includes(type)
+        ?  setFilters({...filters,  checkBox: filters.checkBox.filter(checkboxFilter => checkboxFilter !== type)})
+        : setFilters({...filters, checkBox: [...filters.checkBox, type]});
+    }
+
+    const checkboxFilteredData =
+    filters?.checkBox?.length > 0
+      ? menuData.filter((item) =>filters?.checkBox?.every((checkboxFilter) => item[checkboxFilter]))
+      : menuData;
+
+    const textFilteredData = 
+    filters.search.length > 0
+    ? checkboxFilteredData.filter(({name}) => name.toLowerCase().includes(filters.search.toLowerCase()))
+    : checkboxFilteredData;
+
+    const sortFilteredData = filters.sortType
+    ? textFilteredData.sort((item1,item2) => filters.sortType==='lth' ? item1.price - item2.price : item2.price - item1.price)
+    : textFilteredData;
 
     const getData = async () =>{
         try{
             const {status,data} = await fakeFetch('https://example.com/api/menu');
             if(status === 200){
-                setMenuData(data.menu)
-            setDisplayData(data.menu)
+                setMenuData(data.menu);
             }
             
         }catch(e){
@@ -22,31 +50,9 @@ export const MenuProvider = ({children}) =>{
         }
     }
 
-    const changeHandler = (event) =>{
-        const len = event.target.value.length;
-        len> 0 
-        ?  setDisplayData(
-            menuData.filter(({name})=>name.toLowerCase().includes(event.target.value.toLowerCase()) ))
-        : setDisplayData(menuData);
-    }
-
-    const handleSort=(input) =>{
-        const sortedItems = input === 'lth'
-         ? displayData.sort((a,b)=> a.price-b.price)
-        : displayData.sort((a,b)=> b.price-a.price)
-        setDisplayData([...sortedItems]);
-    }
-
-    const handleCheck = (input) =>{
-        if(input==='veg')
-        setDisplayData(displayData.filter(({is_vegetarian}) => is_vegetarian))
-        else if (input === 'spicy')
-         setDisplayData(displayData.filter(({is_spicy}) => is_spicy))
-         else
-         setDisplayData(menuData);
-    }
-
     const addToCart = (item) => setCart([...cart, item]);
+
+    
 
 
     useEffect(()=>{
@@ -54,7 +60,7 @@ export const MenuProvider = ({children}) =>{
     },[])
 
     return (
-        <MenuContext.Provider value={{displayData,handleSort, changeHandler, handleCheck, cart,addToCart}}>
+        <MenuContext.Provider value={{menuData, cart,addToCart, handleSearch,handleSort, handleCheckbox, sortFilteredData}}>
         {children}
         </MenuContext.Provider>
     )
